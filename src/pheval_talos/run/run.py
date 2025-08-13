@@ -12,7 +12,13 @@ def run_annotation(input_dir: Path) -> None:
         None
     """
     subprocess.run(
-        ["nextflow", "-c", f"{input_dir}/nextflow/annotation.config", "run", f"{input_dir}/nextflow/annotation.nf", "-resume"],
+        [
+            "nextflow",
+            "-c",
+            f"{input_dir}/nextflow/annotation.config",
+            "run",
+            f"{input_dir}/nextflow/annotation.nf",
+        ],
         check=False,
         shell=False,
     )
@@ -35,11 +41,10 @@ def run_talos(input_dir: Path, testdata_dir: Path, raw_results_dir: Path) -> Non
             f"{input_dir}/nextflow/talos.config",
             "run",
             f"{input_dir}/nextflow/talos.nf",
-            f"--matrix_table",
+            "--matrix_table",
             f"{raw_results_dir}/{testdata_dir.name}.mt",
             "--phenopackets",
             testdata_dir.joinpath(f"{testdata_dir.name}_cohort.json"),
-            "-resume",
         ],
         check=False,
     )

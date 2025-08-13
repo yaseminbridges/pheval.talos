@@ -15,6 +15,7 @@ def sanitise_id(s: str) -> str:
     s = s.replace("/", "_").replace(" ", "_")
     return re.sub(r"[^A-Za-z0-9_.-]", "_", s)
 
+
 def extract_phenopacket(phenopacket: Family | Phenopacket, is_family: bool) -> Phenopacket:
     """
     Extract phenotypic and subject information from a given phenopacket.
@@ -46,7 +47,9 @@ def extract_phenopacket(phenopacket: Family | Phenopacket, is_family: bool) -> P
     )
 
 
-def create_pedigree_for_phenopacket(phenopacket: Phenopacket | Family, pedigree: list[str], is_family: bool) -> list[str]:
+def create_pedigree_for_phenopacket(
+    phenopacket: Phenopacket | Family, pedigree: list[str], is_family: bool
+) -> list[str]:
     """
     Generate a pedigree file content for a given Phenopacket or Family instance.
     Args:
