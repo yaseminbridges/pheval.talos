@@ -4,8 +4,6 @@ TALOS runner for PhEval
 
 # Docs
 
-https://yaseminbridges.github.io/pheval_talos/
-
 https://yaseminbridges.github.io/pheval.talos/
 
 # Acknowledgements
