@@ -405,7 +405,11 @@
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TalosPhEvalRunner</span><span class="p">(</span><span class="n">PhEvalRunner</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runner class implementation.&quot;&quot;&quot;</span>
 
@@ -430,8 +434,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run.&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
         <span class="n">configurations</span> <span class="o">=</span> <span class="n">TALOSConfigurations</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir_config</span><span class="o">.</span><span class="n">tool_specific_configuration_options</span><span class="p">)</span>
-        <span class="n">run_pipeline_per_sample</span><span class="p">(</span><span class="n">input_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">testdata_dir</span><span class="p">,</span>
-                                <span class="n">raw_results_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_results_dir</span><span class="p">,</span> <span class="n">apptainer</span><span class="o">=</span><span class="n">configurations</span><span class="o">.</span><span class="n">apptainer</span><span class="p">)</span>
+        <span class="n">run_pipeline_per_sample</span><span class="p">(</span>
+            <span class="n">input_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir</span><span class="p">,</span>
+            <span class="n">testdata_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">testdata_dir</span><span class="p">,</span>
+            <span class="n">raw_results_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_results_dir</span><span class="p">,</span>
+            <span class="n">apptainer</span><span class="o">=</span><span class="n">configurations</span><span class="o">.</span><span class="n">apptainer</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Post Process.&quot;&quot;&quot;</span>
@@ -468,9 +476,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/runner.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Post Process.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;post processing&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -541,12 +549,20 @@
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
     <span class="n">configurations</span> <span class="o">=</span> <span class="n">TALOSConfigurations</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir_config</span><span class="o">.</span><span class="n">tool_specific_configuration_options</span><span class="p">)</span>
-    <span class="n">run_pipeline_per_sample</span><span class="p">(</span><span class="n">input_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">testdata_dir</span><span class="p">,</span>
-                            <span class="n">raw_results_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_results_dir</span><span class="p">,</span> <span class="n">apptainer</span><span class="o">=</span><span class="n">configurations</span><span class="o">.</span><span class="n">apptainer</span><span class="p">)</span>
+    <span class="n">run_pipeline_per_sample</span><span class="p">(</span>
+        <span class="n">input_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dir</span><span class="p">,</span>
+        <span class="n">testdata_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">testdata_dir</span><span class="p">,</span>
+        <span class="n">raw_results_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_results_dir</span><span class="p">,</span>
+        <span class="n">apptainer</span><span class="o">=</span><span class="n">configurations</span><span class="o">.</span><span class="n">apptainer</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
