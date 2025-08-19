@@ -336,7 +336,7 @@
 
 
 <h2 id="src.pheval_talos.run.run.run_annotation" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">run_annotation</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">)</span></code>
+          <code class="highlight language-python"><span class="n">run_annotation</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">,</span> <span class="n">phenopacket_path</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">)</span></code>
 
 </h2>
 
@@ -347,15 +347,15 @@
 Args:
     input_dir (Path): The directory containing the necessary Nextflow workflow and
     configuration files for the annotation process.
+    testdata_dir (Path): The testdata directory.
+    phenopacket_path (Path): The path to the phenopacket.
     apptainer (bool): Whether to use apptainer to run the workflow.
 Returns:
     None</p>
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/run/run.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
@@ -376,12 +376,18 @@ Returns:
 <span class="normal">25</span>
 <span class="normal">26</span>
 <span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_annotation</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_annotation</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">phenopacket_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run the annotation process using Nextflow.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        input_dir (Path): The directory containing the necessary Nextflow workflow and</span>
 <span class="sd">        configuration files for the annotation process.</span>
+<span class="sd">        testdata_dir (Path): The testdata directory.</span>
+<span class="sd">        phenopacket_path (Path): The path to the phenopacket.</span>
 <span class="sd">        apptainer (bool): Whether to use apptainer to run the workflow.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
@@ -389,7 +395,7 @@ Returns:
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;nextflow&quot;</span><span class="p">,</span>
         <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/nextflow/annotation.config&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">testdata_dir</span><span class="si">}</span><span class="s2">/nextflow_config/</span><span class="si">{</span><span class="n">phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_annotation.config&quot;</span><span class="p">,</span>
         <span class="s2">&quot;run&quot;</span><span class="p">,</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/nextflow/annotation.nf&quot;</span><span class="p">,</span>
     <span class="p">]</span>
@@ -412,7 +418,7 @@ Returns:
 
 
 <h2 id="src.pheval_talos.run.run.run_talos" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">run_talos</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">)</span></code>
+          <code class="highlight language-python"><span class="n">run_talos</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">,</span> <span class="n">phenopacket_path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">)</span></code>
 
 </h2>
 
@@ -423,6 +429,7 @@ Returns:
 Args:
     input_dir (Path): The directory containing the Talos Nextflow configuration and pipeline script.
     testdata_dir (Path): The directory containing the phenopackets file for the cohort data.
+    phenopacket_path (Path): The path to the phenopacket.
     raw_results_dir (Path): The raw results directory.
     apptainer (bool): Whether to use apptainer to run the workflow.
 Returns:
@@ -430,11 +437,7 @@ Returns:
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/run/run.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
@@ -457,12 +460,19 @@ Returns:
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_talos</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">apptainer</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_talos</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">phenopacket_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+              <span class="n">apptainer</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run the Talos Nextflow pipeline.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        input_dir (Path): The directory containing the Talos Nextflow configuration and pipeline script.</span>
 <span class="sd">        testdata_dir (Path): The directory containing the phenopackets file for the cohort data.</span>
+<span class="sd">        phenopacket_path (Path): The path to the phenopacket.</span>
 <span class="sd">        raw_results_dir (Path): The raw results directory.</span>
 <span class="sd">        apptainer (bool): Whether to use apptainer to run the workflow.</span>
 <span class="sd">    Returns:</span>
@@ -471,13 +481,12 @@ Returns:
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;nextflow&quot;</span><span class="p">,</span>
         <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/nextflow/talos.config&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">testdata_dir</span><span class="si">}</span><span class="s2">/nextflow_config/</span><span class="si">{</span><span class="n">phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_talos.config&quot;</span><span class="p">,</span>
         <span class="s2">&quot;run&quot;</span><span class="p">,</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/nextflow/talos.nf&quot;</span><span class="p">,</span>
         <span class="s2">&quot;--matrix_table&quot;</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">raw_results_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">testdata_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.mt&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--phenopackets&quot;</span><span class="p">,</span>
-        <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">testdata_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_cohort.json&quot;</span><span class="p">),</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">raw_results_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.mt&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;--phenopackets </span><span class="si">{</span><span class="n">phenopacket_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">apptainer</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-with-singularity&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/talos.sif&quot;</span><span class="p">]</span>

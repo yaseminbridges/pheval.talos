@@ -2,38 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/cli/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/main/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/runner/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/tool_specific_configuration_options/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/prepare/create_cohort/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/prepare/edit_next_flow_configs/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/prepare/prepare/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
     <url>
          <loc>https://yaseminbridges.github.io/pheval_talos/api/pheval_talos/run/run/</loc>
-         <lastmod>2025-08-13</lastmod>
+         <lastmod>2025-08-19</lastmod>
     </url>
 </urlset>

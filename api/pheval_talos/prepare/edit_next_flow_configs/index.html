@@ -367,10 +367,7 @@ Returns:
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/prepare/edit_next_flow_configs.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
@@ -394,7 +391,13 @@ Returns:
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
-<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">edit_annotation_config</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">edit_annotation_config</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Edit the annotation configuration file for a specified cohort by updating</span>
 <span class="sd">    Nextflow parameters in the configuration file located in the provided input</span>
@@ -412,16 +415,19 @@ Returns:
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">annotation_config</span> <span class="o">=</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;nextflow/annotation.config&quot;</span><span class="p">)</span>
-    <span class="n">update_nextflow_params</span><span class="p">(</span>
-        <span class="n">annotation_config</span><span class="p">,</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;cohort&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;input_vcf_dir&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;vcf&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;cohort_output_dir&quot;</span><span class="p">:</span> <span class="n">raw_results_dir</span><span class="p">,</span>
-            <span class="s2">&quot;processed_annotations&quot;</span><span class="p">:</span> <span class="n">output_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;processed_annotations&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;large_files&quot;</span><span class="p">:</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;large_files&quot;</span><span class="p">),</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
+    <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;nextflow_config&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cohort_phenopacket_path</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">(</span><span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;cohort_phenopackets&quot;</span><span class="p">)):</span>
+        <span class="n">update_nextflow_params</span><span class="p">(</span>
+            <span class="n">annotation_config</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;cohort&quot;</span><span class="p">:</span> <span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="p">,</span>
+                <span class="s2">&quot;input_vcf_dir&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_vcf&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;cohort_output_dir&quot;</span><span class="p">:</span> <span class="n">raw_results_dir</span><span class="p">,</span>
+                <span class="s2">&quot;processed_annotations&quot;</span><span class="p">:</span> <span class="n">output_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;processed_annotations&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;large_files&quot;</span><span class="p">:</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;large_files&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+            <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nextflow_config/</span><span class="si">{</span><span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_annotation.config&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -452,13 +458,7 @@ Returns:
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/prepare/edit_next_flow_configs.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
@@ -474,7 +474,15 @@ Returns:
 <span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">edit_talos_config</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">edit_talos_config</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">testdata_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">raw_results_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the Talos config file with provided parameters.</span>
 <span class="sd">    Parameters:</span>
@@ -486,17 +494,19 @@ Returns:
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">talos_config</span> <span class="o">=</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;nextflow/talos.config&quot;</span><span class="p">)</span>
-    <span class="n">update_nextflow_params</span><span class="p">(</span>
-        <span class="n">talos_config</span><span class="p">,</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;cohort&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;input_dir&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="p">,</span>
-            <span class="s2">&quot;pedigree&quot;</span><span class="p">:</span> <span class="s2">&quot;$</span><span class="si">{params.input_dir}</span><span class="s2">/pedigree.ped&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="n">raw_results_dir</span><span class="p">,</span>
-            <span class="s2">&quot;processed_annotations&quot;</span><span class="p">:</span> <span class="n">output_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;processed_annotations&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;large_files&quot;</span><span class="p">:</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;large_files&quot;</span><span class="p">),</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">cohort_phenopacket_path</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">(</span><span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;cohort_phenopackets&quot;</span><span class="p">)):</span>
+        <span class="n">update_nextflow_params</span><span class="p">(</span>
+            <span class="n">talos_config</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;cohort&quot;</span><span class="p">:</span> <span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="p">,</span>
+                <span class="s2">&quot;input_dir&quot;</span><span class="p">:</span> <span class="n">testdata_dir</span><span class="p">,</span>
+                <span class="s2">&quot;pedigree&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$</span><span class="se">{{</span><span class="s1">params.input_dir</span><span class="se">}}</span><span class="s1">/pedigree/</span><span class="si">{</span><span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s1">.ped&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="n">raw_results_dir</span><span class="p">,</span>
+                <span class="s2">&quot;processed_annotations&quot;</span><span class="p">:</span> <span class="n">output_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;processed_annotations&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;large_files&quot;</span><span class="p">:</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;large_files&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+            <span class="n">testdata_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nextflow_config/</span><span class="si">{</span><span class="n">cohort_phenopacket_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_talos.config&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -509,7 +519,7 @@ Returns:
 
 
 <h2 id="src.pheval_talos.prepare.edit_next_flow_configs.update_nextflow_params" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">update_nextflow_params</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span></code>
+          <code class="highlight language-python"><span class="n">update_nextflow_params</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">updates</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></code>
 
 </h2>
 
@@ -523,6 +533,8 @@ Args:
     updates: dict[str, str]
         A dictionary where keys represent parameter names (<code>param_name</code>) to search for,
         and values are their corresponding new values.
+    output_path: Path
+        The path to write the configuration file
 Raises:
     ValueError
         If a parameter specified in <code>updates</code> cannot be found in the configuration file.
@@ -531,8 +543,7 @@ Returns:
 
           <details class="quote">
             <summary>Source code in <code>src/pheval_talos/prepare/edit_next_flow_configs.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
-<span class="normal">10</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
@@ -554,7 +565,10 @@ Returns:
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_nextflow_params</span><span class="p">(</span><span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_nextflow_params</span><span class="p">(</span><span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update specific parameters in a Nextflow configuration file.</span>
 <span class="sd">    Args:</span>
@@ -563,6 +577,8 @@ Returns:
 <span class="sd">        updates: dict[str, str]</span>
 <span class="sd">            A dictionary where keys represent parameter names (`param_name`) to search for,</span>
 <span class="sd">            and values are their corresponding new values.</span>
+<span class="sd">        output_path: Path</span>
+<span class="sd">            The path to write the configuration file</span>
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If a parameter specified in `updates` cannot be found in the configuration file.</span>
@@ -577,7 +593,7 @@ Returns:
         <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find param `params.</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">` to update.&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Updated `params.</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s1">` to &quot;</span><span class="si">{</span><span class="n">new_value</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
-    <span class="n">config_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+    <span class="n">output_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
