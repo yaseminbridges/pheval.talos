@@ -1,12 +1,13 @@
 import re
 from pathlib import Path
 
+from pheval.utils.file_utils import all_files
 from pheval.utils.logger import get_logger
 
 logger = get_logger()
 
 
-def update_nextflow_params(config_path: Path, updates: dict[str, str]) -> None:
+def update_nextflow_params(config_path: Path, updates: dict[str, str], output_path: Path) -> None:
     """
     Update specific parameters in a Nextflow configuration file.
     Args:
@@ -15,6 +16,8 @@ def update_nextflow_params(config_path: Path, updates: dict[str, str]) -> None:
         updates: dict[str, str]
             A dictionary where keys represent parameter names (`param_name`) to search for,
             and values are their corresponding new values.
+        output_path: Path
+            The path to write the configuration file
     Raises:
         ValueError
             If a parameter specified in `updates` cannot be found in the configuration file.
@@ -29,7 +32,7 @@ def update_nextflow_params(config_path: Path, updates: dict[str, str]) -> None:
         if count == 0:
             raise ValueError(f"Could not find param `params.{param_name}` to update.")
         logger.info(f'Updated `params.{param_name}` to "{new_value}"')
-    config_path.write_text(content)
+    output_path.write_text(content)
 
 
 def edit_annotation_config(input_dir: Path, testdata_dir: Path, output_dir: Path, raw_results_dir: Path) -> None:
@@ -50,16 +53,19 @@ def edit_annotation_config(input_dir: Path, testdata_dir: Path, output_dir: Path
         None
     """
     annotation_config = input_dir.joinpath("nextflow/annotation.config")
-    update_nextflow_params(
-        annotation_config,
-        {
-            "cohort": testdata_dir.name,
-            "input_vcf_dir": testdata_dir.joinpath("vcf"),
-            "cohort_output_dir": raw_results_dir,
-            "processed_annotations": output_dir.joinpath("processed_annotations"),
-            "large_files": input_dir.joinpath("large_files"),
-        },
-    )
+    testdata_dir.joinpath("nextflow_config").mkdir(exist_ok=True)
+    for cohort_phenopacket_path in all_files(testdata_dir.joinpath("cohort_phenopackets")):
+        update_nextflow_params(
+            annotation_config,
+            {
+                "cohort": cohort_phenopacket_path.stem,
+                "input_vcf_dir": testdata_dir.joinpath(f"{cohort_phenopacket_path.stem}_vcf"),
+                "cohort_output_dir": raw_results_dir,
+                "processed_annotations": output_dir.joinpath("processed_annotations"),
+                "large_files": input_dir.joinpath("large_files"),
+            },
+            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_annotation.config")
+        )
 
 
 def edit_talos_config(input_dir: Path, testdata_dir: Path, output_dir: Path, raw_results_dir: Path) -> None:
@@ -74,14 +80,16 @@ def edit_talos_config(input_dir: Path, testdata_dir: Path, output_dir: Path, raw
         None
     """
     talos_config = input_dir.joinpath("nextflow/talos.config")
-    update_nextflow_params(
-        talos_config,
-        {
-            "cohort": testdata_dir.name,
-            "input_dir": testdata_dir,
-            "pedigree": "${params.input_dir}/pedigree.ped",
-            "output_dir": raw_results_dir,
-            "processed_annotations": output_dir.joinpath("processed_annotations"),
-            "large_files": input_dir.joinpath("large_files"),
-        },
-    )
+    for cohort_phenopacket_path in all_files(testdata_dir.joinpath("cohort_phenopackets")):
+        update_nextflow_params(
+            talos_config,
+            {
+                "cohort": cohort_phenopacket_path.stem,
+                "input_dir": testdata_dir,
+                "pedigree": f'${{params.input_dir}}/pedigree/{cohort_phenopacket_path.stem}.ped',
+                "output_dir": raw_results_dir,
+                "processed_annotations": output_dir.joinpath("processed_annotations"),
+                "large_files": input_dir.joinpath("large_files"),
+            },
+            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_talos.config")
+        )

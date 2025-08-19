@@ -6,7 +6,7 @@ from pathlib import Path
 from pheval.runners.runner import PhEvalRunner
 
 from pheval_talos.prepare.prepare import prepare_for_talos
-from pheval_talos.run.run import run_annotation, run_talos
+from pheval_talos.run.run import run_pipeline_per_sample
 from pheval_talos.tool_specific_configuration_options import TALOSConfigurations
 
 
@@ -35,13 +35,8 @@ class TalosPhEvalRunner(PhEvalRunner):
         """Run."""
         print("running")
         configurations = TALOSConfigurations.model_validate(self.input_dir_config.tool_specific_configuration_options)
-        run_annotation(input_dir=self.input_dir, apptainer=configurations.apptainer)
-        run_talos(
-            input_dir=self.input_dir,
-            testdata_dir=self.testdata_dir,
-            raw_results_dir=self.raw_results_dir,
-            apptainer=configurations.apptainer,
-        )
+        run_pipeline_per_sample(input_dir=self.input_dir, testdata_dir=self.testdata_dir,
+                                raw_results_dir=self.raw_results_dir, apptainer=configurations.apptainer)
 
     def post_process(self):
         """Post Process."""

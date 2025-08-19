@@ -4,7 +4,7 @@ from pathlib import Path
 
 from phenopackets import Cohort, Family, Individual, MetaData, Phenopacket, Resource, Sex
 from pheval.utils.file_utils import all_files
-from pheval.utils.phenopacket_utils import phenopacket_reader, write_phenopacket
+from pheval.utils.phenopacket_utils import phenopacket_reader, write_phenopacket, PhenopacketUtil
 
 reported_sex_map = {1: Sex.MALE, 2: Sex.FEMALE}
 sex_map_conversion = {1: "2", 2: "1"}
@@ -31,7 +31,7 @@ def extract_phenopacket(phenopacket: Family | Phenopacket, is_family: bool) -> P
         return Phenopacket(
             id=sanitise_id(phenopacket.proband.subject.id),
             subject=Individual(
-                id=sanitise_id(phenopacket.id) + "_FAM",
+                id=phenopacket.id,
                 sex=reported_sex_map.get(phenopacket.proband.subject.sex, Sex.UNKNOWN_SEX),
             ),
             phenotypic_features=list(phenopacket.proband.phenotypic_features),
@@ -48,7 +48,7 @@ def extract_phenopacket(phenopacket: Family | Phenopacket, is_family: bool) -> P
 
 
 def create_pedigree_for_phenopacket(
-    phenopacket: Phenopacket | Family, pedigree: list[str], is_family: bool
+        phenopacket: Phenopacket | Family, is_family: bool
 ) -> list[str]:
     """
     Generate a pedigree file content for a given Phenopacket or Family instance.
@@ -61,6 +61,7 @@ def create_pedigree_for_phenopacket(
         list[str]: The updated pedigree list containing pedigree data in correctly
         formatted strings.
     """
+    pedigree = []
     if is_family:
         phenopacket_ped = phenopacket.pedigree
         for person in phenopacket_ped.persons:
@@ -70,12 +71,13 @@ def create_pedigree_for_phenopacket(
                 f"{sex_map_conversion.get(phenopacket.subject.sex, 0)}\t{person.affected_status}\n"
             )
         return pedigree
-    pedigree.append(
-        f"{sanitise_id(phenopacket.subject.id)}_FAM\t{sanitise_id(phenopacket.subject.id)}\t"
-        f"0\t0\t"
-        f"{sex_map_conversion.get(phenopacket.subject.sex, 0)}\t2\n"
-    )
-    return pedigree
+    else:
+        pedigree.append(
+            f"{sanitise_id(phenopacket.subject.id)}_FAM\t{sanitise_id(phenopacket.subject.id)}\t"
+            f"0\t0\t"
+            f"{sex_map_conversion.get(phenopacket.subject.sex, 0)}\t2\n"
+        )
+        return pedigree
 
 
 def create_cohort(testdata_dir: Path) -> None:
@@ -85,32 +87,42 @@ def create_cohort(testdata_dir: Path) -> None:
         testdata_dir (Path): Path to the directory containing the phenopacket directory.
     """
     phenopacket_dir = testdata_dir.joinpath("phenopackets")
-    cohort = Cohort(
-        id=testdata_dir.name,
-        description=f"Phenotypic data from {testdata_dir.name}",
-        members=[],
-        meta_data=MetaData(
-            created_by="TalosPhEvalRunner",
-            resources=[
-                Resource(
-                    id="hp",
-                    name="Human Phenotype Ontology",
-                    url="http://www.human-phenotype-ontology.org",
-                    version="2024-08-13",
-                    namespace_prefix="HP",
-                    iri_prefix="http://purl.obolibrary.org/obo/HP_",
-                ),
-            ],
-        ),
-    )
-    pedigree = []
+    testdata_dir.joinpath("cohort_phenopackets").mkdir(exist_ok=True)
+    testdata_dir.joinpath("pedigree").mkdir(exist_ok=True)
     for phenopacket_path in all_files(phenopacket_dir):
+        testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf").mkdir(exist_ok=True)
         is_family = "proband" in json.load(open(phenopacket_path))
         phenopacket = phenopacket_reader(phenopacket_path)
+        vcf_file_name = Path(PhenopacketUtil(phenopacket).vcf_file_data(phenopacket_path, testdata_dir.joinpath(
+            phenopacket_path.stem)).uri).name
+
+        testdata_dir.joinpath(f"vcf/{vcf_file_name}").rename(
+            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}"))
+        testdata_dir.joinpath(f"vcf/{vcf_file_name}.tbi").rename(
+            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}.tbi"))
+        cohort_name = phenopacket_path.stem
+        cohort = Cohort(
+            id=cohort_name,
+            description=f"Phenotypic data from {cohort_name}",
+            members=[],
+            meta_data=MetaData(
+                created_by="TalosPhEvalRunner",
+                resources=[
+                    Resource(
+                        id="hp",
+                        name="Human Phenotype Ontology",
+                        url="http://www.human-phenotype-ontology.org",
+                        version="2024-08-13",
+                        namespace_prefix="HP",
+                        iri_prefix="http://purl.obolibrary.org/obo/HP_",
+                    ),
+                ],
+            ),
+        )
         cohort.members.append(
             extract_phenopacket(phenopacket, is_family),
         )
-        pedigree = create_pedigree_for_phenopacket(phenopacket, pedigree, is_family)
-    with open(testdata_dir.joinpath("pedigree.ped"), "w") as f:
-        f.writelines(pedigree)
-    write_phenopacket(cohort, testdata_dir.joinpath(f"{testdata_dir.name}_cohort.json"))
+        pedigree = create_pedigree_for_phenopacket(phenopacket, is_family)
+        write_phenopacket(cohort, testdata_dir.joinpath(f"cohort_phenopackets/{phenopacket_path.name}"))
+        with open(testdata_dir.joinpath(f"pedigree/{phenopacket_path.stem}.ped"), "w") as f:
+            f.writelines(pedigree)
