@@ -4,7 +4,7 @@ from pathlib import Path
 
 from phenopackets import Cohort, Family, Individual, MetaData, Phenopacket, Resource, Sex
 from pheval.utils.file_utils import all_files
-from pheval.utils.phenopacket_utils import phenopacket_reader, write_phenopacket, PhenopacketUtil
+from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader, write_phenopacket
 
 reported_sex_map = {1: Sex.MALE, 2: Sex.FEMALE}
 sex_map_conversion = {1: "2", 2: "1"}
@@ -47,9 +47,7 @@ def extract_phenopacket(phenopacket: Family | Phenopacket, is_family: bool) -> P
     )
 
 
-def create_pedigree_for_phenopacket(
-        phenopacket: Phenopacket | Family, is_family: bool
-) -> list[str]:
+def create_pedigree_for_phenopacket(phenopacket: Phenopacket | Family, is_family: bool) -> list[str]:
     """
     Generate a pedigree file content for a given Phenopacket or Family instance.
     Args:
@@ -93,13 +91,18 @@ def create_cohort(testdata_dir: Path) -> None:
         testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf").mkdir(exist_ok=True)
         is_family = "proband" in json.load(open(phenopacket_path))
         phenopacket = phenopacket_reader(phenopacket_path)
-        vcf_file_name = Path(PhenopacketUtil(phenopacket).vcf_file_data(phenopacket_path, testdata_dir.joinpath(
-            phenopacket_path.stem)).uri).name
+        vcf_file_name = Path(
+            PhenopacketUtil(phenopacket)
+            .vcf_file_data(phenopacket_path, testdata_dir.joinpath(phenopacket_path.stem))
+            .uri
+        ).name
 
         testdata_dir.joinpath(f"vcf/{vcf_file_name}").rename(
-            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}"))
+            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}")
+        )
         testdata_dir.joinpath(f"vcf/{vcf_file_name}.tbi").rename(
-            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}.tbi"))
+            testdata_dir.joinpath(f"{phenopacket_path.stem}_vcf/{vcf_file_name}.tbi")
+        )
         cohort_name = phenopacket_path.stem
         cohort = Cohort(
             id=cohort_name,

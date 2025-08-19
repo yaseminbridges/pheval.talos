@@ -64,7 +64,7 @@ def edit_annotation_config(input_dir: Path, testdata_dir: Path, output_dir: Path
                 "processed_annotations": output_dir.joinpath("processed_annotations"),
                 "large_files": input_dir.joinpath("large_files"),
             },
-            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_annotation.config")
+            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_annotation.config"),
         )
 
 
@@ -86,10 +86,10 @@ def edit_talos_config(input_dir: Path, testdata_dir: Path, output_dir: Path, raw
             {
                 "cohort": cohort_phenopacket_path.stem,
                 "input_dir": testdata_dir,
-                "pedigree": f'${{params.input_dir}}/pedigree/{cohort_phenopacket_path.stem}.ped',
+                "pedigree": f"${{params.input_dir}}/pedigree/{cohort_phenopacket_path.stem}.ped",
                 "output_dir": raw_results_dir,
                 "processed_annotations": output_dir.joinpath("processed_annotations"),
                 "large_files": input_dir.joinpath("large_files"),
             },
-            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_talos.config")
+            testdata_dir.joinpath(f"nextflow_config/{cohort_phenopacket_path.stem}_talos.config"),
         )
