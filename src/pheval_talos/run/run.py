@@ -32,8 +32,9 @@ def run_annotation(input_dir: Path, testdata_dir: Path, phenopacket_path: Path, 
     )
 
 
-def run_talos(input_dir: Path, testdata_dir: Path, phenopacket_path: Path, raw_results_dir: Path,
-              apptainer: bool) -> None:
+def run_talos(
+    input_dir: Path, testdata_dir: Path, phenopacket_path: Path, raw_results_dir: Path, apptainer: bool
+) -> None:
     """
     Run the Talos Nextflow pipeline.
     Args:
@@ -65,7 +66,16 @@ def run_talos(input_dir: Path, testdata_dir: Path, phenopacket_path: Path, raw_r
 
 def run_pipeline_per_sample(input_dir: Path, testdata_dir: Path, raw_results_dir: Path, apptainer: bool):
     for cohort_phenopacket_path in all_files(testdata_dir.joinpath("cohort_phenopackets")):
-        run_annotation(input_dir=input_dir, phenopacket_path=cohort_phenopacket_path, testdata_dir=testdata_dir,
-                       apptainer=apptainer)
-        run_talos(input_dir=input_dir, phenopacket_path=cohort_phenopacket_path, testdata_dir=testdata_dir,
-                  raw_results_dir=raw_results_dir, apptainer=apptainer)
+        run_annotation(
+            input_dir=input_dir,
+            phenopacket_path=cohort_phenopacket_path,
+            testdata_dir=testdata_dir,
+            apptainer=apptainer,
+        )
+        run_talos(
+            input_dir=input_dir,
+            phenopacket_path=cohort_phenopacket_path,
+            testdata_dir=testdata_dir,
+            raw_results_dir=raw_results_dir,
+            apptainer=apptainer,
+        )
